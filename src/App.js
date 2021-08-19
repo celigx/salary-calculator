@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { cityList, childrenList, invalidityList } from './components/data/ArrayList';
 
 function App() {
-  const [amount, setAmount] = useState('')
+  const [salary, setAmount] = useState('')
   const [residence, setResidence] = useState('')
   const [children, setChildren] = useState('0')
   const [dependants, setDependants] = useState('0')
@@ -35,6 +35,48 @@ function App() {
     console.log('invalidity:', option.value)
   }
 
+  // Calculate pension (I. i II. stup)
+  const pensionI = salary * 15 / 100
+  const pensionII = salary * 5 / 100
+  // Calculate gross contribution
+  const totalGrossContribution = pensionI + pensionII
+
+  // Personal deduction
+  const personalDeduction = 2500 * 1.6
+  
+  // Filter children list
+  const childrenDeduction = childrenList.filter(list => list.value <= children)
+  // Calculate total deduction for children
+  const totalChildrenDeduction = childrenDeduction.reduce((total, item) => item.value + total, 0)
+
+  // Calculate dependants deduction
+  const numberOfDependants = dependants === '0' ? 0 : 1750 * parseInt(dependants)
+
+  // Total deduction
+  const totalDeduction = personalDeduction + totalChildrenDeduction + numberOfDependants + invalidity
+
+  // Taxable income
+  const taxableIncome = salary - totalGrossContribution - totalDeduction
+
+  // Tax class (lower than 30.000,00 kn = 20%, higher than 30.000,00 kn = 30%)
+  const taxClass = salary <= 30000 ? 20 : 30
+  // Calculate tax
+  const tax = taxableIncome * taxClass / 100
+
+  // Calculate surtax
+  const surtax = tax * parseInt(residence) / 100
+
+  // Calculate total tax + surtax
+  const totalTax = tax + surtax
+
+  // Calculate health care contribution (16.5%)
+  const healthCareContribution = salary * 16.50 / 100
+
+  // Calculate gross 2
+  const grossTwo = parseInt(salary) + healthCareContribution
+
+  // Calculate net salary
+  const netSalary = grossTwo - healthCareContribution - totalGrossContribution - totalTax
 
   return (
     <div className="app">
