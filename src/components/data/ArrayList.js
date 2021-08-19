@@ -1,7 +1,7 @@
 export const cityList = [
   { value:"0.00", label: "(bez prireza)" },
   { value:"8.00", label: "Andrijaševci (8.00%)" },
-  { value:"0", label: "Antunovac (0.00%)" },
+  { value:"0.00", label: "Antunovac (0.00%)" },
   { value:"5.00", label: "Babina Greda (5.00%)" },
   { value:"1.00", label: "Bale (1.00%)" },
   { value:"5.00", label: "Barban (5.00%)" },
@@ -326,20 +326,20 @@ export const cityList = [
 ]
 
 export const childrenList = [
-  { value: '0', label: 'Bez djece' },
-  { value: '0.7', label: '1. dijete' },
-  { value: '1', label: '2. dijete' },
-  { value: '1.4', label: '3. dijete' },
-  { value: '1.9', label: '4. dijete' },
-  { value: '2.5', label: '5. dijete' },
-  { value: '3.2', label: '6. dijete' },
-  { value: '4.0', label: '7. dijete' },
-  { value: '4.0', label: '8. dijete' },
-  { value: '5.9', label: '9. dijete' }
+  { value: 0, label: 'Bez djece' },
+  { value: 1750, label: '1. dijete' },
+  { value: 2500, label: '2. dijete' },
+  { value: 3500, label: '3. dijete' },
+  { value: 4750, label: '4. dijete' },
+  { value: 6250, label: '5. dijete' },
+  { value: 8000, label: '6. dijete' },
+  { value: 10000, label: '7. dijete' },
+  { value: 12250, label: '8. dijete' },
+  { value: 14750, label: '9. dijete' }
 ]
 
 export const invalidityList = [
-  { value: '0', label: 'Bez invaliditeta' },
-  { value: '0.4', label: 'Djelomična invalidnost' },
-  { value: '1.5', label: '100% invalidnost' }
+  { value: 0, label: 'Bez invaliditeta' },
+  { value: 1000, label: 'Djelomična invalidnost' },
+  { value: 3750, label: '100% invalidnost' }
 ]
