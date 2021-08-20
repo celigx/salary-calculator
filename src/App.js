@@ -5,10 +5,10 @@ import { cityList, childrenList, invalidityList } from './components/data/ArrayL
 
 function App() {
   const [salary, setAmount] = useState('')
-  const [residence, setResidence] = useState('')
-  const [children, setChildren] = useState('0')
+  const [residence, setResidence] = useState(cityList[313].value)
+  const [children, setChildren] = useState(childrenList[0].value)
   const [dependants, setDependants] = useState('0')
-  const [invalidity, setInvalidity] = useState('')
+  const [invalidity, setInvalidity] = useState(invalidityList[0].value)
 
   const handleAmount = (e) => {
     setAmount(e.target.value)
@@ -99,6 +99,9 @@ function App() {
       return grossSalary
     }
   }
+
+  console.log('residence:', residence);
+  console.log('invalidity:', invalidity);
   
   return (
     <div className="app">
@@ -118,6 +121,7 @@ function App() {
             <Select 
               options={cityList} 
               onChange={handleResidence}
+              defaultValue={cityList[313]}
             />
           </div>
         </div>
@@ -127,6 +131,7 @@ function App() {
             <h5 className="inputTitle">Broj djece</h5>
             <Select 
               options={childrenList} 
+              defaultValue={childrenList[0]}
               onChange={handleChildren} 
             />
           </div>
@@ -141,6 +146,7 @@ function App() {
           <Select 
             options={invalidityList} 
             onChange={handleInvalidity} 
+            defaultValue={invalidityList[0]}
           />
         </div>
 
