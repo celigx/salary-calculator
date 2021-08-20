@@ -66,8 +66,8 @@ function App() {
   // Calculate surtax
   const surtax = tax * parseInt(residence) / 100
 
-  // Calculate total tax + surtax
-  const totalTax = tax + surtax
+  // Calculate total tax + surtax only if salary is bigger than 5.000,00 kn
+  const totalTax = salary <= 5001 ? 0 : tax + surtax
 
   // Calculate health care contribution (16.5%)
   const healthCareContribution = salary * 16.50 / 100
@@ -77,6 +77,7 @@ function App() {
 
   // Calculate net salary
   const netSalary = grossTwo - healthCareContribution - totalGrossContribution - totalTax
+  console.log('netSalary:', netSalary);
 
   return (
     <div className="app">
