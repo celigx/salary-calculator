@@ -79,9 +79,29 @@ function App() {
   const netSalary = grossTwo - healthCareContribution - totalGrossContribution - totalTax
   console.log('netSalary:', netSalary);
 
+  // Calculate gross salary
+  const grossSalary = () => {
+    // Surtax coefficient
+    const surTaxCoefficient = (residence / 100) + 1
+    // Tax and surtax coefficient for the rate of 20%
+    const coefficient20 = (20 * surTaxCoefficient) / (100 - (20 * 1.18)) + 1
+    // Tax and surtax coefficient for the rate of 30%
+    const coefficient30 = (30 * surTaxCoefficient) / (100 - (30 * surTaxCoefficient)) + 1
+
+    if (parseInt(salary) < totalDeduction) {
+      const grossSalary = parseInt(salary) * 1.25
+      return grossSalary
+    } else if (parseInt(salary) < 30000 - 6000 * surTaxCoefficient + totalDeduction) {
+      const grossSalary = Math.floor( ((parseInt(salary) - totalDeduction) * coefficient20) + totalDeduction ) / 0.80
+      return grossSalary
+    } else if (parseInt(salary) > 30000 - 6000 * surTaxCoefficient + totalDeduction) {
+      const grossSalary = Math.floor( (30000 + totalDeduction) + ((parseInt(salary) - (30000 - 6000 * surTaxCoefficient+ totalDeduction)) * coefficient30) ) / 0.80
+      return grossSalary
+    }
+  }
+  
   return (
     <div className="app">
-
       <div className="titleContainer">
         <h1 className="title">Kalkulator za izračun plaće<span className="dot">.</span></h1>
       </div>
