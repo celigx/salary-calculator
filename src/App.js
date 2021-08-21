@@ -58,10 +58,13 @@ function App() {
   // Taxable income
   const taxableIncome = salary - totalGrossContribution - totalDeduction
 
-  // Tax class (lower than 30.000,00 kn = 20%, higher than 30.000,00 kn = 30%)
-  const taxClass = salary <= 30000 ? 20 : 30
+  // 20% tax - baseline up to 30.000,00 kn
+  const taxClass20 = taxableIncome <= 30000 ? taxableIncome * 20 / 100 : 30000 * 20 / 100
+  // 30% tax - baseline from 30.000,00 kn
+  const taxClass30 = taxableIncome > 30000 ? (taxableIncome - 30000) * 30 / 100 : 0
+  
   // Calculate tax
-  const tax = taxableIncome * taxClass / 100
+  const tax = taxClass20 + taxClass30
 
   // Calculate surtax
   const surtax = tax * parseInt(residence) / 100
@@ -99,9 +102,6 @@ function App() {
       return grossSalary
     }
   }
-
-  console.log('residence:', residence);
-  console.log('invalidity:', invalidity);
   
   return (
     <div className="app">
