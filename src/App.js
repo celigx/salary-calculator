@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import './App.sass';
 import Select from 'react-select';
-import { cityList, childrenList, invalidityList } from './components/data/ArrayList';
+import { cityList, childrenList, invalidityList, typeList } from './components/data/ArrayList';
+import GrossToNet from './components/GrossToNet';
+import NetToGross from './components/NetToGross';
 
 function App() {
-  const [salary, setAmount] = useState('')
+  const [amount, setAmount] = useState(0)
   const [residence, setResidence] = useState(cityList[313].value)
   const [children, setChildren] = useState(childrenList[0].value)
   const [dependants, setDependants] = useState('0')
   const [invalidity, setInvalidity] = useState(invalidityList[0].value)
+  const [type, setType] = useState(typeList[0].value)
 
   const handleAmount = (e) => {
     setAmount(e.target.value)
@@ -35,9 +38,14 @@ function App() {
     console.log('invalidity:', option.value)
   }
 
+  const handleType = (option) => {
+    setType(option.value)
+    console.log('type:', option.value);
+  }
+
   // Calculate pension (I. i II. stup)
-  const pensionI = salary * 15 / 100
-  const pensionII = salary * 5 / 100
+  const pensionI = amount * 15 / 100
+  const pensionII = amount * 5 / 100
   // Calculate gross contribution
   const totalGrossContribution = pensionI + pensionII
 
@@ -56,7 +64,7 @@ function App() {
   const totalDeduction = personalDeduction + totalChildrenDeduction + numberOfDependants + invalidity
 
   // Taxable income
-  const taxableIncome = salary - totalGrossContribution - totalDeduction
+  const taxableIncome = amount === 0 ? 0 : amount - totalGrossContribution - totalDeduction
 
   // 20% tax - baseline up to 30.000,00 kn
   const taxClass20 = taxableIncome <= 30000 ? taxableIncome * 20 / 100 : 30000 * 20 / 100
@@ -70,17 +78,17 @@ function App() {
   const surtax = tax * parseInt(residence) / 100
 
   // Calculate total tax + surtax only if salary is bigger than 5.000,00 kn
-  const totalTax = salary <= 5001 ? 0 : tax + surtax
+  const totalTax = amount <= 5001 ? 0 : tax + surtax
 
   // Calculate health care contribution (16.5%)
-  const healthCareContribution = salary * 16.50 / 100
+  const healthCareContribution = amount * 16.50 / 100
 
   // Calculate gross 2
-  const grossTwo = parseInt(salary) + healthCareContribution
+  const grossTwo = parseInt(amount) + healthCareContribution
 
   // Calculate net salary
   const netSalary = grossTwo - healthCareContribution - totalGrossContribution - totalTax
-  console.log('netSalary:', netSalary);
+  // console.log('netSalary:', netSalary);
 
   // Calculate gross salary
   const grossSalary = () => {
@@ -91,18 +99,23 @@ function App() {
     // Tax and surtax coefficient for the rate of 30%
     const coefficient30 = (30 * surTaxCoefficient) / (100 - (30 * surTaxCoefficient)) + 1
 
-    if (parseInt(salary) < totalDeduction) {
-      const grossSalary = parseInt(salary) * 1.25
+    if (parseInt(amount) < totalDeduction) {
+      const grossSalary = parseInt(amount) * 1.25
       return grossSalary
-    } else if (parseInt(salary) < 30000 - 6000 * surTaxCoefficient + totalDeduction) {
-      const grossSalary = Math.floor( ((parseInt(salary) - totalDeduction) * coefficient20) + totalDeduction ) / 0.80
+    } else if (parseInt(amount) < 30000 - 6000 * surTaxCoefficient + totalDeduction) {
+      const grossSalary = Math.floor( ((parseInt(amount) - totalDeduction) * coefficient20) + totalDeduction ) / 0.80
       return grossSalary
-    } else if (parseInt(salary) > 30000 - 6000 * surTaxCoefficient + totalDeduction) {
-      const grossSalary = Math.floor( (30000 + totalDeduction) + ((parseInt(salary) - (30000 - 6000 * surTaxCoefficient+ totalDeduction)) * coefficient30) ) / 0.80
+    } else if (parseInt(amount) > 30000 - 6000 * surTaxCoefficient + totalDeduction) {
+      const grossSalary = Math.floor( (30000 + totalDeduction) + ((parseInt(amount) - (30000 - 6000 * surTaxCoefficient+ totalDeduction)) * coefficient30) ) / 0.80
       return grossSalary
     }
   }
-  
+
+  // Format number to currency
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('hr-HR', {style: 'currency', currency: 'HRK'}).format(value)
+  }
+
   return (
     <div className="app">
       <div className="titleContainer">
@@ -142,15 +155,31 @@ function App() {
         </div>
 
         <div className="bottom">
-          <h5 className="inputTitle">Invalidnost</h5>
-          <Select 
-            options={invalidityList} 
-            onChange={handleInvalidity} 
-            defaultValue={invalidityList[0]}
-          />
+          <div className="invalidity">
+            <h5 className="inputTitle">Invalidnost</h5>
+            <Select 
+              options={invalidityList} 
+              onChange={handleInvalidity} 
+              defaultValue={invalidityList[0]}
+              />
+          </div>
+          <div className="type">
+            <h5 className="inputTitle">Izračun</h5>
+            <Select 
+              options={typeList} 
+              onChange={handleType} 
+              defaultValue={typeList[0]}
+            />
+          </div>
         </div>
 
       </div>
+
+      {/* Display output based on selected input option */}
+      {type === 'grossToNet' 
+        ? <GrossToNet formatNumber={formatNumber} amount={amount} netSalary={netSalary} /> 
+        : <NetToGross formatNumber={formatNumber} amount={amount} grossSalary={grossSalary} />}
+
     </div>
   );
 }
