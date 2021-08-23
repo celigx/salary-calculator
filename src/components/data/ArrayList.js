@@ -343,3 +343,8 @@ export const invalidityList = [
   { value: 1000, label: 'Djelomična invalidnost' },
   { value: 3750, label: '100% invalidnost' }
 ]
+
+export const typeList = [
+  { value: 'grossToNet', label: 'Bruto u Neto' },
+  { value: 'netToGross', label: 'Neto u Bruto' }
+]
