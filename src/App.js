@@ -16,7 +16,12 @@ function App() {
 
   useEffect(() => {
     type === 'grossToNet' ? setAmount(net) : setAmount(grossSalary(net))
-  }, [type, net])
+
+    // If dependants input is empty return 0, else return input value
+    dependants === '' ? setDependants(0) : setDependants(dependants)
+  }, [type, net, dependants])
+
+  console.log('dep', dependants);
 
   const handleAmount = (e) => {
     setAmount(e.target.value)
@@ -135,7 +140,7 @@ function App() {
         <div className="left">
           <div className="amount">
             <h5 className="inputTitle">Iznos</h5>
-            <input className="input" type="text" placeholder="20000" onChange={handleAmount} />
+            <input className="input" type="number" placeholder="20000" onChange={handleAmount} />
           </div>
           <div className="residence">
             <h5 className="inputTitle">Mjesto prebivališta</h5>
