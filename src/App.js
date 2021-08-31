@@ -169,7 +169,7 @@ function App() {
 
         <div className="bottom">
           <div className="invalidity">
-            <h5 className="inputTitle">Invalidnost</h5>
+            <h5 className="inputTitle">Stupanj invaliditeta</h5>
             <Select 
               options={invalidityList} 
               onChange={handleInvalidity} 
@@ -177,7 +177,7 @@ function App() {
               />
           </div>
           <div className="type">
-            <h5 className="inputTitle">Izračun</h5>
+            <h5 className="inputTitle">Vrsta izračuna</h5>
             <Select 
               options={typeList} 
               onChange={handleType} 
@@ -248,7 +248,7 @@ function App() {
       </div>
 
       <div className="container">
-        <p className="text">Ukupni prirez</p>
+        <p className="text">Doprinos za zdravstveno osiguranje</p>
         <p className="percent">16.50%</p>
         <p className="number">{formatNumber(healthCareContribution)}</p>
       </div>
