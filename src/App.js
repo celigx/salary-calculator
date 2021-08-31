@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.sass';
 import Select from 'react-select';
 import { cityList, childrenList, invalidityList, typeList } from './components/data/ArrayList';
@@ -9,12 +9,18 @@ function App() {
   const [amount, setAmount] = useState(0)
   const [residence, setResidence] = useState(cityList[313].value)
   const [children, setChildren] = useState(childrenList[0].value)
-  const [dependants, setDependants] = useState('0')
+  const [dependants, setDependants] = useState(0)
   const [invalidity, setInvalidity] = useState(invalidityList[0].value)
   const [type, setType] = useState(typeList[0].value)
+  const [net, setNet] = useState(0)
+
+  useEffect(() => {
+    type === 'grossToNet' ? setAmount(net) : setAmount(grossSalary(net))
+  }, [type, net])
 
   const handleAmount = (e) => {
     setAmount(e.target.value)
+    setNet(e.target.value)
     console.log('amount:', e.target.value)
   }
 
@@ -87,26 +93,28 @@ function App() {
   const grossTwo = parseInt(amount) + healthCareContribution
 
   // Calculate net salary
-  const netSalary = grossTwo - healthCareContribution - totalGrossContribution - totalTax
+  const netSalary = Math.round(grossTwo - healthCareContribution - totalGrossContribution - totalTax)
   // console.log('netSalary:', netSalary);
 
   // Calculate gross salary
-  const grossSalary = () => {
+  const grossSalary = (n) => {
     // Surtax coefficient
     const surTaxCoefficient = (residence / 100) + 1
     // Tax and surtax coefficient for the rate of 20%
-    const coefficient20 = (20 * surTaxCoefficient) / (100 - (20 * 1.18)) + 1
+    const coefficient20 = (20 * surTaxCoefficient) / (100 - (20 * surTaxCoefficient)) + 1
     // Tax and surtax coefficient for the rate of 30%
     const coefficient30 = (30 * surTaxCoefficient) / (100 - (30 * surTaxCoefficient)) + 1
 
-    if (parseInt(amount) < totalDeduction) {
-      const grossSalary = parseInt(amount) * 1.25
+    if (parseInt(n) < totalDeduction) {
+      const grossSalary = parseInt(n) * 1.25
       return grossSalary
-    } else if (parseInt(amount) < 30000 - 6000 * surTaxCoefficient + totalDeduction) {
-      const grossSalary = Math.floor( ((parseInt(amount) - totalDeduction) * coefficient20) + totalDeduction ) / 0.80
+    } else if (parseInt(n) < 30000 - 6000 * surTaxCoefficient + totalDeduction) {
+      const grossSalary =  ( ((parseInt(n) - totalDeduction) * coefficient20) + totalDeduction ) / 0.80
+      console.log('two', grossSalary);
       return grossSalary
-    } else if (parseInt(amount) > 30000 - 6000 * surTaxCoefficient + totalDeduction) {
-      const grossSalary = Math.floor( (30000 + totalDeduction) + ((parseInt(amount) - (30000 - 6000 * surTaxCoefficient+ totalDeduction)) * coefficient30) ) / 0.80
+    } else if (parseInt(n) > 30000 - 6000 * surTaxCoefficient + totalDeduction) {
+      const grossSalary = Math.round( (30000 + totalDeduction) + ((parseInt(n) - (30000 - 6000 * surTaxCoefficient + totalDeduction)) * coefficient30) ) / 0.80
+      console.log('three', grossSalary);
       return grossSalary
     }
   }
@@ -178,7 +186,79 @@ function App() {
       {/* Display output based on selected input option */}
       {type === 'grossToNet' 
         ? <GrossToNet formatNumber={formatNumber} amount={amount} netSalary={netSalary} /> 
-        : <NetToGross formatNumber={formatNumber} amount={amount} grossSalary={grossSalary} />}
+        : <NetToGross formatNumber={formatNumber} grossSalary={grossSalary} net={net} />}
+
+      <div className="outputTable">
+      <div className="container">
+        <h4 className="text color">Bruto 1</h4>
+        <h4 className="number color">{type === 'grossToNet' ? formatNumber(net) : formatNumber(grossSalary(net))}</h4>
+      </div>
+
+      <div className="container">
+        <p className="text">I. stup mirovinskog osiguranja</p>
+        <p className="percent">15.00%</p>
+        <p className="number">{formatNumber(pensionI)}</p>
+      </div>
+
+      <div className="container">
+        <p className="text">II. stup mirovinskog osiguranja</p>
+        <p className="percent">5.00%</p>
+        <p className="number">{formatNumber(pensionII)}</p>
+      </div>
+
+      <div className="container">
+        <h4 className="text">Ukupno doprinosi iz bruta</h4>
+        <h4 className="number">{formatNumber(totalGrossContribution)}</h4>
+      </div>
+
+      <div className="container">
+        <p className="text">Ukupna olakšica</p>
+        <p className="number">{formatNumber(totalDeduction)}</p>
+      </div>
+
+      <div className="container">
+        <h4 className="text">Oporezivi dohodak</h4>
+        <h4 className="number">{formatNumber(taxableIncome)}</h4>
+      </div>
+
+      <div className="container">
+        <p className="text">Ukupni porez</p>
+        <p className="number">{formatNumber(tax)}</p>
+      </div>
+
+      <div className="container">
+        <p className="text">Ukupni prirez</p>
+        <p className="percent">18.00%</p>
+        <p className="number">{formatNumber(surtax)}</p>
+      </div>
+
+      <div className="container">
+        <h4 className="text">Ukupni porez i prirez</h4>
+        <h4 className="number">{formatNumber(totalTax)}</h4>
+      </div>
+
+      <div className="container">
+        <h4 className="text">Bruto 2</h4>
+        <h4 className="number">{formatNumber(grossTwo)}</h4>
+      </div>
+
+      <div className="container">
+        <p className="text">Ukupni prirez</p>
+        <p className="percent">16.50%</p>
+        <p className="number">{formatNumber(healthCareContribution)}</p>
+      </div>
+
+      <div className="container">
+        <h4 className="text">Ukupno doprinosi na bruto</h4>
+        <h4 className="number">{formatNumber(healthCareContribution)}</h4>
+      </div>
+
+      <div className="container">
+        <h4 className="text color">Neto plaća</h4>
+        <h4 className="number color">{type === 'grossToNet' ? formatNumber(netSalary) : formatNumber(net)}</h4>
+      </div>
+
+      </div>
 
     </div>
   );
