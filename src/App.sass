@@ -5,7 +5,7 @@ h1, h2, h3, h4, h5, h6
 
 .app 
   font-family: 'Montserrat', sans-serif
-  padding: 60px 20px
+  margin: 60px 20px
 
   .titleContainer
     text-align: center
@@ -20,6 +20,7 @@ h1, h2, h3, h4, h5, h6
       margin: 25px 0 10px 0
 
   .outputContainer
+    margin: 0 0 40px 0
     .grossContainer,
     .netContainer
       color: #fff
@@ -82,3 +83,60 @@ input::-webkit-inner-spin-button
 
 input[type=number]
   -moz-appearance: textfield
+
+@media screen and ( min-width: 768px  )
+  .app
+    margin: 60px 80px
+
+    .outputContainer
+      display: flex
+      justify-content: center
+      .grossContainer,
+      .netContainer
+        margin: 0 20px
+
+    .outputTable
+      .container
+        display: flex
+        .text
+          text-align: start
+        .percent
+          text-align: center
+        .number
+          text-align: end
+
+@media screen and ( min-width: 1024px )
+  .app
+    max-width: 1024px
+    margin: 0 auto
+
+    .inputContainer
+      .left,
+      .right,
+      .bottom
+        display: flex
+
+      .left
+        .amount
+          flex: 1
+          margin-right: 20px
+        .residence
+          flex: 1
+          margin-left: 20px
+
+      .right
+        .children
+          flex: 1
+          margin-right: 20px
+        .dependants
+          flex: 1
+          margin-left: 20px
+
+      .bottom
+        .invalidity
+          flex: 1
+          margin-right: 20px
+        .type
+          flex: 1
+          margin-left: 20px
+  
