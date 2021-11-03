@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/salary-calculator/static/css/main.5672fbf6.chunk.css",
+    "main.js": "/salary-calculator/static/js/main.3b7fec5e.chunk.js",
+    "main.js.map": "/salary-calculator/static/js/main.3b7fec5e.chunk.js.map",
+    "runtime-main.js": "/salary-calculator/static/js/runtime-main.69125ee1.js",
+    "runtime-main.js.map": "/salary-calculator/static/js/runtime-main.69125ee1.js.map",
+    "static/js/2.f257b0af.chunk.js": "/salary-calculator/static/js/2.f257b0af.chunk.js",
+    "static/js/2.f257b0af.chunk.js.map": "/salary-calculator/static/js/2.f257b0af.chunk.js.map",
+    "static/js/3.d4d415ab.chunk.js": "/salary-calculator/static/js/3.d4d415ab.chunk.js",
+    "static/js/3.d4d415ab.chunk.js.map": "/salary-calculator/static/js/3.d4d415ab.chunk.js.map",
+    "index.html": "/salary-calculator/index.html",
+    "static/css/main.5672fbf6.chunk.css.map": "/salary-calculator/static/css/main.5672fbf6.chunk.css.map",
+    "static/js/2.f257b0af.chunk.js.LICENSE.txt": "/salary-calculator/static/js/2.f257b0af.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.69125ee1.js",
+    "static/js/2.f257b0af.chunk.js",
+    "static/css/main.5672fbf6.chunk.css",
+    "static/js/main.3b7fec5e.chunk.js"
+  ]
+}
