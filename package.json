@@ -1,6 +1,7 @@
 {
   "name": "salary-calculator",
   "version": "1.0.1",
+  "homepage": "https://celigx.github.io/salary-calculator",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
