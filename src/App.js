@@ -19,6 +19,8 @@ function App() {
 
     // If dependants input is empty return 0, else return input value
     dependants === '' ? setDependants(0) : setDependants(dependants)
+
+  // eslint-disable-next-line
   }, [type, net, dependants])
 
   console.log('dep', dependants);
@@ -244,7 +246,7 @@ function App() {
 
       <div className="container">
         <h4 className="text">Bruto 2</h4>
-        <h4 className="number">{formatNumber(grossTwo)}</h4>
+        <h4 className="number">{amount === '' ? setAmount(0) : formatNumber(grossTwo)}</h4>
       </div>
 
       <div className="container">
