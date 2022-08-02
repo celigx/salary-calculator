@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&display=swap')
 
-h1, h2, h3, h4, h5, h6
+h1, h2, h3, h4, h5, h6, p
   margin: 0
 
-.app 
+.app
   font-family: 'Montserrat', sans-serif
   margin: 60px 20px
 
@@ -30,6 +30,13 @@ h1, h2, h3, h4, h5, h6
       min-width: 100px
       padding: 20px 40px
       margin: 0 0 20px 0
+      .gross,
+      .net
+        margin: 0 0 10px 0
+      .gross-eur,
+      .net-eur
+        font-size: 20px
+        font-weight: 600
     h4
       margin-bottom: 10px
 
@@ -38,20 +45,20 @@ h1, h2, h3, h4, h5, h6
     border-radius: 4px
     padding: 20px 20px
     .container
-      justify-content: space-between
+      align-items: center
       border-bottom: 1px solid #b7b7b7
       .text
-        flex: 2
         text-align: end
         margin: 10px 0
       .color
         color: #2684ff
       .percent
-        flex: 2
         text-align: end
         margin: 10px 0
       .number
-        flex: 1
+        text-align: end
+        margin: 10px 0
+      .number-eur
         text-align: end
         margin: 10px 0
 
@@ -97,12 +104,20 @@ input[type=number]
 
     .outputTable
       .container
-        display: flex
+        display: grid
+        grid-template-columns: 2fr 1fr 1fr 1fr
+        grid-template-rows: auto
         .text
+          grid-column: 1 / 2
           text-align: start
         .percent
-          text-align: center
+          grid-column: 2 / 3
+          text-align: end
         .number
+          grid-column: 3 / 4
+          text-align: end
+        .number-eur
+          grid-column: 4 / 5
           text-align: end
 
 @media screen and ( min-width: 1024px )
@@ -139,4 +154,3 @@ input[type=number]
         .type
           flex: 1
           margin-left: 20px
-  
