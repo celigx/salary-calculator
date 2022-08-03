@@ -1,356 +1,46 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.sass";
-import Select from "react-select";
 import {
   cityList,
   childrenList,
   invalidityList,
   typeList,
 } from "./components/data/ArrayList";
+
+import Title from "./components/Title";
+import Input from "./components/Input";
+import Output from "./components/Output";
 import GrossToNet from "./components/GrossToNet";
 import NetToGross from "./components/NetToGross";
 
-import { formatHrk, formatEur, conversionRate } from "./helper/helpers";
+import { AppContext } from "./context/contextStore";
 
 function App() {
-  const [amount, setAmount] = useState(0);
-  const [residence, setResidence] = useState(cityList[313].value);
-  const [children, setChildren] = useState(childrenList[0].value);
-  const [dependants, setDependants] = useState(0);
-  const [invalidity, setInvalidity] = useState(invalidityList[0].value);
-  const [type, setType] = useState(typeList[0].value);
-  const [net, setNet] = useState(0);
+  const [option, setOption] = useState({
+    amount: 0,
+    residence: cityList[313].value,
+    children: childrenList[0].value,
+    dependants: 0,
+    invalidity: invalidityList[0].value,
+    type: typeList[0].value,
+  });
 
-  useEffect(() => {
-    type === "grossToNet" ? setAmount(net) : setAmount(grossSalary(net));
-
-    // If dependants input is empty return 0, else return input value
-    dependants === "" ? setDependants(0) : setDependants(dependants);
-
-    // eslint-disable-next-line
-  }, [type, net, dependants]);
-
-  console.log("dep", dependants);
-
-  const handleAmount = (e) => {
-    setAmount(e.target.value);
-    setNet(e.target.value);
-    console.log("amount:", e.target.value);
-  };
-
-  const handleResidence = (option) => {
-    setResidence(option.value);
-    console.log("residence:", option.value);
-  };
-
-  const handleChildren = (option) => {
-    setChildren(option.value);
-    console.log("children:", option.value);
-  };
-
-  const handleDependants = (e) => {
-    setDependants(e.target.value);
-    console.log("dependants:", e.target.value);
-  };
-
-  const handleInvalidity = (option) => {
-    setInvalidity(option.value);
-    console.log("invalidity:", option.value);
-  };
-
-  const handleType = (option) => {
-    setType(option.value);
-    console.log("type:", option.value);
-  };
-
-  // Calculate pension (I. i II. stup)
-  const pensionI = (amount * 15) / 100;
-  const pensionII = (amount * 5) / 100;
-  // Calculate gross contribution
-  const totalGrossContribution = pensionI + pensionII;
-
-  // Personal deduction
-  const personalDeduction = 2500 * 1.6;
-
-  // Filter children list
-  const childrenDeduction = childrenList.filter(
-    (list) => list.value <= children
-  );
-  // Calculate total deduction for children
-  const totalChildrenDeduction = childrenDeduction.reduce(
-    (total, item) => item.value + total,
-    0
-  );
-
-  // Calculate dependants deduction
-  const numberOfDependants =
-    dependants === "0" ? 0 : 1750 * parseInt(dependants);
-
-  // Total deduction
-  // prettier-ignore
-  const totalDeduction = personalDeduction + totalChildrenDeduction + numberOfDependants + invalidity;
-
-  // Taxable income
-  const taxableIncome =
-    amount === 0 ? 0 : amount - totalGrossContribution - totalDeduction;
-
-  // 20% tax - baseline up to 30.000,00 kn
-  const taxClass20 =
-    taxableIncome <= 30000 ? (taxableIncome * 20) / 100 : (30000 * 20) / 100;
-  // 30% tax - baseline from 30.000,00 kn
-  const taxClass30 =
-    taxableIncome > 30000 ? ((taxableIncome - 30000) * 30) / 100 : 0;
-
-  // Calculate tax
-  const tax = taxClass20 + taxClass30;
-
-  // Calculate surtax
-  const surtax = (tax * parseInt(residence)) / 100;
-
-  // Calculate total tax + surtax only if salary is bigger than 5.000,00 kn
-  const totalTax = amount <= 5001 ? 0 : tax + surtax;
-
-  // Calculate health care contribution (16.5%)
-  const healthCareContribution = (amount * 16.5) / 100;
-
-  // Calculate gross 2
-  const grossTwo = parseInt(amount) + healthCareContribution;
-
-  // Calculate net salary
-  const netSalary = Math.round(
-    grossTwo - healthCareContribution - totalGrossContribution - totalTax
-  );
-  // console.log('netSalary:', netSalary);
-
-  // Calculate gross salary
-  const grossSalary = (n) => {
-    // Surtax coefficient
-    const surTaxCoefficient = residence / 100 + 1;
-    // Tax and surtax coefficient for the rate of 20%
-    const coefficient20 =
-      (20 * surTaxCoefficient) / (100 - 20 * surTaxCoefficient) + 1;
-    // Tax and surtax coefficient for the rate of 30%
-    const coefficient30 =
-      (30 * surTaxCoefficient) / (100 - 30 * surTaxCoefficient) + 1;
-
-    if (parseInt(n) < totalDeduction) {
-      const grossSalary = parseInt(n) * 1.25;
-      return grossSalary;
-    } else if (
-      parseInt(n) <
-      30000 - 6000 * surTaxCoefficient + totalDeduction
-    ) {
-      const grossSalary =
-        ((parseInt(n) - totalDeduction) * coefficient20 + totalDeduction) / 0.8;
-      console.log("two", grossSalary);
-      return grossSalary;
-    } else if (
-      parseInt(n) >
-      30000 - 6000 * surTaxCoefficient + totalDeduction
-    ) {
-      const grossSalary =
-        Math.round(
-          30000 +
-            totalDeduction +
-            (parseInt(n) -
-              (30000 - 6000 * surTaxCoefficient + totalDeduction)) *
-              coefficient30
-        ) / 0.8;
-      console.log("three", grossSalary);
-      return grossSalary;
-    }
-  };
+  const [salary, setSalary] = useState({
+    netAmount: 0,
+    grossAmount: 0,
+    netSalary: 0,
+    grossSalary: 0,
+  });
 
   return (
-    <div className="app">
-      <div className="titleContainer">
-        <h1 className="title">
-          Kalkulator za izračun plaće<span className="dot">.</span>
-        </h1>
+    <AppContext.Provider value={{ salary, setSalary, option, setOption }}>
+      <div className="app">
+        <Title />
+        <Input />
+        {option.type === "grossToNet" ? <GrossToNet /> : <NetToGross />}
+        <Output />
       </div>
-
-      <div className="inputContainer">
-        <div className="left">
-          <div className="amount">
-            <h5 className="inputTitle">Iznos</h5>
-            <input
-              className="input"
-              type="number"
-              placeholder="20000"
-              onChange={handleAmount}
-            />
-          </div>
-          <div className="residence">
-            <h5 className="inputTitle">Mjesto prebivališta</h5>
-            <Select
-              options={cityList}
-              onChange={handleResidence}
-              defaultValue={cityList[313]}
-            />
-          </div>
-        </div>
-
-        <div className="right">
-          <div className="children">
-            <h5 className="inputTitle">Broj djece</h5>
-            <Select
-              options={childrenList}
-              defaultValue={childrenList[0]}
-              onChange={handleChildren}
-            />
-          </div>
-          <div className="dependants">
-            <h5 className="inputTitle">Broj uzdržavanih osoba</h5>
-            <input
-              className="input"
-              type="text"
-              placeholder="0"
-              onChange={handleDependants}
-            />
-          </div>
-        </div>
-
-        <div className="bottom">
-          <div className="invalidity">
-            <h5 className="inputTitle">Stupanj invaliditeta</h5>
-            <Select
-              options={invalidityList}
-              onChange={handleInvalidity}
-              defaultValue={invalidityList[0]}
-            />
-          </div>
-          <div className="type">
-            <h5 className="inputTitle">Vrsta izračuna</h5>
-            <Select
-              options={typeList}
-              onChange={handleType}
-              defaultValue={typeList[0]}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Display output based on selected input option */}
-      {type === "grossToNet" ? (
-        <GrossToNet amount={amount} netSalary={netSalary} />
-      ) : (
-        <NetToGross grossSalary={grossSalary} net={net} />
-      )}
-
-      <div className="outputTable">
-        <div className="container">
-          <h4 className="text color">Bruto 1</h4>
-          <h4 className="number color">
-            {type === "grossToNet"
-              ? formatHrk(net)
-              : formatHrk(grossSalary(net))}
-          </h4>
-          <h4 className="number-eur color">
-            {type === "grossToNet"
-              ? formatEur(net / conversionRate)
-              : formatEur(grossSalary(net / conversionRate))}
-          </h4>
-        </div>
-
-        <div className="container">
-          <p className="text">I. stup mirovinskog osiguranja</p>
-          <p className="percent">15.00%</p>
-          <p className="number">{formatHrk(pensionI)}</p>
-          <p className="number-eur">{formatEur(pensionI / conversionRate)}</p>
-        </div>
-
-        <div className="container">
-          <p className="text">II. stup mirovinskog osiguranja</p>
-          <p className="percent">5.00%</p>
-          <p className="number">{formatHrk(pensionII)}</p>
-          <p className="number-eur">{formatEur(pensionII / conversionRate)}</p>
-        </div>
-
-        <div className="container">
-          <h4 className="text">Ukupno doprinosi iz bruta</h4>
-          <h4 className="number">{formatHrk(totalGrossContribution)}</h4>
-          <h4 className="number-eur">
-            {formatEur(totalGrossContribution / conversionRate)}
-          </h4>
-        </div>
-
-        <div className="container">
-          <p className="text">Ukupna olakšica</p>
-          <p className="number">{formatHrk(totalDeduction)}</p>
-          <p className="number-eur">
-            {formatEur(totalDeduction / conversionRate)}
-          </p>
-        </div>
-
-        <div className="container">
-          <h4 className="text">Oporezivi dohodak</h4>
-          <h4 className="number">{formatHrk(taxableIncome)}</h4>
-          <h4 className="number-eur">
-            {formatEur(taxableIncome / conversionRate)}
-          </h4>
-        </div>
-
-        <div className="container">
-          <p className="text">Ukupni porez</p>
-          <p className="number">{formatHrk(tax)}</p>
-          <p className="number-eur">{formatEur(tax / conversionRate)}</p>
-        </div>
-
-        <div className="container">
-          <p className="text">Ukupni prirez</p>
-          <p className="percent">18.00%</p>
-          <p className="number">{formatHrk(surtax)}</p>
-          <p className="number-eur">{formatEur(surtax / conversionRate)}</p>
-        </div>
-
-        <div className="container">
-          <h4 className="text">Ukupni porez i prirez</h4>
-          <h4 className="number">{formatHrk(totalTax)}</h4>
-          <h4 className="number-eur">{formatEur(totalTax / conversionRate)}</h4>
-        </div>
-
-        <div className="container">
-          <h4 className="text">Bruto 2</h4>
-          <h4 className="number">
-            {amount === "" ? setAmount(0) : formatHrk(grossTwo)}
-          </h4>
-          <h4 className="number-eur">
-            {amount === ""
-              ? setAmount(0)
-              : formatEur(grossTwo / conversionRate)}
-          </h4>
-        </div>
-
-        <div className="container">
-          <p className="text">Doprinos za zdravstveno osiguranje</p>
-          <p className="percent">16.50%</p>
-          <p className="number">{formatHrk(healthCareContribution)}</p>
-          <p className="number-eur">
-            {formatEur(healthCareContribution / conversionRate)}
-          </p>
-        </div>
-
-        <div className="container">
-          <h4 className="text">Ukupno doprinosi na bruto</h4>
-          <h4 className="number">{formatHrk(healthCareContribution)}</h4>
-          <h4 className="number-eur">
-            {formatEur(healthCareContribution / conversionRate)}
-          </h4>
-        </div>
-
-        <div className="container">
-          <h4 className="text color">Neto plaća</h4>
-          <h4 className="number color">
-            {type === "grossToNet" ? formatHrk(netSalary) : formatHrk(net)}
-          </h4>
-          <h4 className="number-eur color">
-            {type === "grossToNet"
-              ? formatEur(netSalary / conversionRate)
-              : formatEur(net / conversionRate)}
-          </h4>
-        </div>
-      </div>
-    </div>
+    </AppContext.Provider>
   );
 }
 

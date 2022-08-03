@@ -1,6 +1,13 @@
+import { useContext } from "react";
+import { AppContext } from "../context/contextStore";
 import { formatHrk, formatEur, conversionRate } from "../helper/helpers";
 
-const GrossToNet = ({ amount, netSalary }) => {
+const GrossToNet = () => {
+  const { option, salary } = useContext(AppContext);
+
+  const { netSalary } = salary;
+  const { amount } = option;
+
   return (
     <div className="outputContainer">
       <div className="grossContainer">
