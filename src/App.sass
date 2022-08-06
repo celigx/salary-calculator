@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;800&display=swap')
 
+$outputBackground: #c8e0f9
+$outputTableBackground: #ebf1fc
+$text: #1b1f11
+$border: #1b1f11
+
 h1, h2, h3, h4, h5, h6, p
   margin: 0
 
@@ -12,7 +17,7 @@ h1, h2, h3, h4, h5, h6, p
     .title
       font-weight: 600
       .dot
-        color: #2684ff
+        color: $outputBackground
 
   .inputContainer
     margin-bottom: 40px
@@ -23,8 +28,8 @@ h1, h2, h3, h4, h5, h6, p
     margin: 0 0 40px 0
     .grossContainer,
     .netContainer
-      color: #fff
-      background: #2684ff
+      color: $text
+      background: $outputBackground
       text-align: center
       border-radius: 4px
       min-width: 200px
@@ -41,17 +46,26 @@ h1, h2, h3, h4, h5, h6, p
       margin-bottom: 10px
 
   .outputTable
-    background: #f0f0f0
+    color: $text
     border-radius: 4px
     padding: 20px 20px
+    .highlight
+      background: $outputBackground !important
     .container
+      background: $outputTableBackground
       align-items: center
-      border-bottom: 1px solid #b7b7b7
+      border-radius: 6px
+      padding: 10px 20px
+      margin: 20px 0
+      .border
+        border-bottom: 1px solid $border
+        &:last-child
+          border-bottom: none
+      .thick
+        border-bottom: 2px solid $border
       .text
         text-align: end
         margin: 10px 0
-      .color
-        color: #2684ff
       .percent
         text-align: end
         margin: 10px 0
@@ -79,8 +93,10 @@ h1, h2, h3, h4, h5, h6, p
   overflow: hidden
   width: 100%
   &:focus
-    border-color: #2684ff
+    border-color: $outputBackground
     border-width: 2px
+  &:hover
+    border-color: #b3b3b3
 
 // Remove arrows/spinners from input
 input::-webkit-outer-spin-button,
@@ -104,21 +120,24 @@ input[type=number]
 
     .outputTable
       .container
-        display: grid
-        grid-template-columns: 2fr 1fr 1fr 1fr
-        grid-template-rows: auto
+        .flex
+          display: flex
+          justify-content: space-between
+        .row
+          display: flex
+          align-items: center
+          justify-content: space-between
+          padding: 10px 0
         .text
-          grid-column: 1 / 2
           text-align: start
         .percent
-          grid-column: 2 / 3
           text-align: end
         .number
-          grid-column: 3 / 4
           text-align: end
         .number-eur
-          grid-column: 4 / 5
           text-align: end
+        .mr-40
+          margin-right: 40px
 
 @media screen and ( min-width: 1024px )
   .app

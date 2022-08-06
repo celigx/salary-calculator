@@ -1,5 +1,5 @@
 import { formatHrk, formatEur, conversionRate } from "../helper/helpers";
-import { childrenList } from "../components/data/ArrayList";
+import { childrenList } from "./data/ArrayList";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/contextStore";
 
@@ -131,116 +131,158 @@ const Output = () => {
 
   return (
     <div className="outputTable">
-      <div className="container">
-        <h4 className="text color">Bruto 1</h4>
-        <h4 className="number color">
-          {type === "grossToNet" ? formatHrk(amount) : formatHrk(grossSalary)}
-        </h4>
-        <h4 className="number-eur color">
-          {type === "grossToNet"
-            ? formatEur(amount / conversionRate)
-            : formatEur(grossSalary / conversionRate)}
-        </h4>
+      <div className="container highlight">
+        <div className="flex">
+          <h4 className="text">BRUTO</h4>
+          <div className="flex">
+            <h4 className="number mr-40">
+              {type === "grossToNet"
+                ? formatHrk(amount)
+                : formatHrk(grossSalary)}
+            </h4>
+            <h4 className="number-eur">
+              {type === "grossToNet"
+                ? formatEur(amount / conversionRate)
+                : formatEur(grossSalary / conversionRate)}
+            </h4>
+          </div>
+        </div>
       </div>
 
       <div className="container">
-        <p className="text">I. stup mirovinskog osiguranja</p>
-        <p className="percent">15.00%</p>
-        <p className="number">{formatHrk(pensionI)}</p>
-        <p className="number-eur">{formatEur(pensionI / conversionRate)}</p>
+        <div className="row border">
+          <p className="text">Doprinos za mirovinsko 1. stup (15%)</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(pensionI)}</p>
+            <p className="number-eur">{formatEur(pensionI / conversionRate)}</p>
+          </span>
+        </div>
+        <div className="row border thick">
+          <p className="text">Doprinos za mirovinski 2. stup (5%)</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(pensionII)}</p>
+            <p className="number-eur">
+              {formatEur(pensionII / conversionRate)}
+            </p>
+          </span>
+        </div>
+        <div className="row border">
+          <h4 className="text">UKUPNO DOPRINOSI IZ BRUTA (20%)</h4>
+          <span className="flex">
+            <h4 className="number mr-40">
+              {formatHrk(totalGrossContribution)}
+            </h4>
+            <h4 className="number-eur">
+              {formatEur(totalGrossContribution / conversionRate)}
+            </h4>
+          </span>
+        </div>
       </div>
 
       <div className="container">
-        <p className="text">II. stup mirovinskog osiguranja</p>
-        <p className="percent">5.00%</p>
-        <p className="number">{formatHrk(pensionII)}</p>
-        <p className="number-eur">{formatEur(pensionII / conversionRate)}</p>
+        <div className="flex">
+          <p className="text">OSOBNI ODBITAK</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(totalDeduction)}</p>
+            <p className="number-eur">
+              {formatEur(totalDeduction / conversionRate)}
+            </p>
+          </span>
+        </div>
       </div>
 
       <div className="container">
-        <h4 className="text">Ukupno doprinosi iz bruta</h4>
-        <h4 className="number">{formatHrk(totalGrossContribution)}</h4>
-        <h4 className="number-eur">
-          {formatEur(totalGrossContribution / conversionRate)}
-        </h4>
+        <div className="row border">
+          <p className="text">Porez (20%)</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(taxClass20)}</p>
+            <p className="number-eur">
+              {formatEur(taxClass20 / conversionRate)}
+            </p>
+          </span>
+        </div>
+        <div className="row border">
+          <p className="text">Porez (30%)</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(taxClass30)}</p>
+            <p className="number-eur">
+              {formatEur(taxClass30 / conversionRate)}
+            </p>
+          </span>
+        </div>
+        <div className="row border thick">
+          <p className="text">Prirez (18%)</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(surtax)}</p>
+            <p className="number-eur">{formatEur(surtax / conversionRate)}</p>
+          </span>
+        </div>
+        <div className="row border">
+          <h4 className="text">UKUPNO POREZ I PRIREZ</h4>
+          <span className="flex">
+            <h4 className="number mr-40">{formatHrk(totalTax)}</h4>
+            <h4 className="number-eur">
+              {formatEur(totalTax / conversionRate)}
+            </h4>
+          </span>
+        </div>
+      </div>
+
+      <div className="container highlight">
+        <div className="flex">
+          <h4 className="text">BRUTO 2</h4>
+          <span className="flex">
+            <h4 className="number mr-40">
+              {amount === ""
+                ? setOption((prevState) => ({ ...prevState, amount: 0 }))
+                : formatHrk(grossTwo)}
+            </h4>
+            <h4 className="number-eur">
+              {amount === ""
+                ? setOption((prevState) => ({ ...prevState, amount: 0 }))
+                : formatEur(grossTwo / conversionRate)}
+            </h4>
+          </span>
+        </div>
       </div>
 
       <div className="container">
-        <p className="text">Ukupna olakšica</p>
-        <p className="number">{formatHrk(totalDeduction)}</p>
-        <p className="number-eur">
-          {formatEur(totalDeduction / conversionRate)}
-        </p>
+        <div className="row border thick">
+          <p className="text">Doprinos za zdravstveno osiguranje</p>
+          <span className="flex">
+            <p className="number mr-40">{formatHrk(healthCareContribution)}</p>
+            <p className="number-eur">
+              {formatEur(healthCareContribution / conversionRate)}
+            </p>
+          </span>
+        </div>
+        <div className="row border">
+          <h4 className="text">UKUPNO DOPRINOSI NA BRUTO</h4>
+          <span className="flex">
+            <h4 className="number mr-40">
+              {formatHrk(healthCareContribution)}
+            </h4>
+            <h4 className="number-eur">
+              {formatEur(healthCareContribution / conversionRate)}
+            </h4>
+          </span>
+        </div>
       </div>
 
-      <div className="container">
-        <h4 className="text">Oporezivi dohodak</h4>
-        <h4 className="number">{formatHrk(taxableIncome)}</h4>
-        <h4 className="number-eur">
-          {formatEur(taxableIncome / conversionRate)}
-        </h4>
-      </div>
-
-      <div className="container">
-        <p className="text">Ukupni porez</p>
-        <p className="number">{formatHrk(tax)}</p>
-        <p className="number-eur">{formatEur(tax / conversionRate)}</p>
-      </div>
-
-      <div className="container">
-        <p className="text">Ukupni prirez</p>
-        <p className="percent">18.00%</p>
-        <p className="number">{formatHrk(surtax)}</p>
-        <p className="number-eur">{formatEur(surtax / conversionRate)}</p>
-      </div>
-
-      <div className="container">
-        <h4 className="text">Ukupni porez i prirez</h4>
-        <h4 className="number">{formatHrk(totalTax)}</h4>
-        <h4 className="number-eur">{formatEur(totalTax / conversionRate)}</h4>
-      </div>
-
-      <div className="container">
-        <h4 className="text">Bruto 2</h4>
-        <h4 className="number">
-          {amount === ""
-            ? setOption((prevState) => ({ ...prevState, amount: 0 }))
-            : formatHrk(grossTwo)}
-        </h4>
-        <h4 className="number-eur">
-          {amount === ""
-            ? setOption((prevState) => ({ ...prevState, amount: 0 }))
-            : formatEur(grossTwo / conversionRate)}
-        </h4>
-      </div>
-
-      <div className="container">
-        <p className="text">Doprinos za zdravstveno osiguranje</p>
-        <p className="percent">16.50%</p>
-        <p className="number">{formatHrk(healthCareContribution)}</p>
-        <p className="number-eur">
-          {formatEur(healthCareContribution / conversionRate)}
-        </p>
-      </div>
-
-      <div className="container">
-        <h4 className="text">Ukupno doprinosi na bruto</h4>
-        <h4 className="number">{formatHrk(healthCareContribution)}</h4>
-        <h4 className="number-eur">
-          {formatEur(healthCareContribution / conversionRate)}
-        </h4>
-      </div>
-
-      <div className="container">
-        <h4 className="text color">Neto plaća</h4>
-        <h4 className="number color">
-          {type === "grossToNet" ? formatHrk(netSalary) : formatHrk(amount)}
-        </h4>
-        <h4 className="number-eur color">
-          {type === "grossToNet"
-            ? formatEur(netSalary / conversionRate)
-            : formatEur(amount / conversionRate)}
-        </h4>
+      <div className="container highlight">
+        <div className="flex">
+          <h4 className="text">NETO</h4>
+          <span className="flex">
+            <h4 className="number mr-40">
+              {type === "grossToNet" ? formatHrk(netSalary) : formatHrk(amount)}
+            </h4>
+            <h4 className="number-eur">
+              {type === "grossToNet"
+                ? formatEur(netSalary / conversionRate)
+                : formatEur(amount / conversionRate)}
+            </h4>
+          </span>
+        </div>
       </div>
     </div>
   );
