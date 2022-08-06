@@ -95,8 +95,6 @@ h1, h2, h3, h4, h5, h6, p
   &:focus
     border-color: $outputBackground
     border-width: 2px
-  &:hover
-    border-color: #b3b3b3
 
 // Remove arrows/spinners from input
 input::-webkit-outer-spin-button,
@@ -138,6 +136,9 @@ input[type=number]
           text-align: end
         .mr-40
           margin-right: 40px
+  .input
+    &:hover
+      border-color: #b3b3b3
 
 @media screen and ( min-width: 1024px )
   .app
