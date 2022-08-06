@@ -1,17 +1,17 @@
 {
   "name": "salary-calculator",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "homepage": "https://celigx.github.io/salary-calculator",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "react-select": "^4.3.1",
-    "web-vitals": "^1.1.2"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.4.0",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
@@ -38,6 +38,6 @@
     ]
   },
   "devDependencies": {
-    "sass": "^1.38.0"
+    "sass": "^1.54.3"
   }
 }
